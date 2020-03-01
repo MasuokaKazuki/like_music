@@ -19,17 +19,17 @@ class Track extends Model
 		if( $artist != NULL ){
 			$lastfm = new Lastfm();
 			$apiArtistTrack = $lastfm->getTrack($artistName);
-			$hasArtistTrack = (isset($apiArtistTrack["toptracks"]["track"])) ? true : false ;
+			$hasApiArtistTrack = (isset($apiArtistTrack["toptracks"]["track"])) ? true : false ;
 
-			if( $hasArtistTrack ){
-				$arrArtistTrack = $apiArtistTrack["toptracks"]["track"];
+			if( $hasApiArtistTrack ){
+				$arrApiArtistTrack = $apiArtistTrack["toptracks"]["track"];
 
                 $artist = Artist::where('name',$artistName)->first();
                 if( $artist != NULL ){
                     Track::where('artist_id',$artist->id)->delete();
                 }
 
-                foreach($arrArtistTrack as $apiData){
+                foreach($arrApiArtistTrack as $apiData){
                     $track = new Track();
                     $track->artist_id  = $artist->id;
                     $track->name       = $apiData["name"];
