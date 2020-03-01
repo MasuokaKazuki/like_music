@@ -12,6 +12,20 @@ class Artist extends Model
 	protected $table = 'artist';
 
 	/**
+	 * アーティストの似たアーティストを取得する
+	 */
+	public function similarArtist(){
+		return $this->hasMany('App\Models\SimilarArtist','artist_id');
+    }
+
+	/**
+	 * アーティストの曲情報を取得する
+	 */
+	public function traks(){
+		return $this->hasMany('App\Models\Track','artist_id');
+    }
+
+	/**
 	 * アップデートすべきか判定する。
 	 * データが存在しない、または1か月以内のデータが存在しなければ、アップデート（インサート）する。
 	 */

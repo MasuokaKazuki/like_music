@@ -6,21 +6,76 @@ use App\Http\Controllers\Controller;
 use App\Models\Artist;
 use App\Models\SimilarArtist;
 use App\Libraries\Lastfm;
+use App\Libraries\YouTube;
 use Illuminate\Http\Request;
 
 class SimilarArtistTrackController extends Controller
 {
 	/**
+	 * 似たアーティストの情報を取得する(LastFmのAPIより)
+	 */
+	public function getSimilarArtistTrack($artistName=""){
+		$similarArtistTracks = $this->getSimilarArtistTrackByDB($artistName);
+
+		if(empty($similarArtistTracks)){
+			$lastfm = new Lastfm();
+			$similarArtistTracks = $lastfm->createSimilarArtistTrack($artistName);
+		}
+
+		return $similarArtistTracks;
+	}
+
+	/**
+	 * 似たアーティストの情報を取得する(DBに格納のデータから)
+	 */
+	private function getSimilarArtistTrackByDB($artistName=""){
+		$similarArtistTracks = array();
+
+		$artist = Artist::where('name',$artistName)->first();
+		$arrSimilarArtist = $artist->similarArtist;
+
+		foreach($arrSimilarArtist as $similarArtist){
+			$artist = Artist::find($similarArtist->similar_artist_id);
+			$arrTracks = $artist->traks;
+			foreach($arrTracks as $track){
+				$similarArtistTracks[] = array('artist'=>$artist->name, 'track'=>$track->name);
+			}
+		}
+
+		if(is_array($similarArtistTracks)) shuffle($similarArtistTracks);
+		return $similarArtistTracks;
+	}
+
+	private function similarArtistTracksAddMovie(array $similarArtistTracks,int $limit=10){
+		$result = array();
+		$cnt = 1;
+		foreach($similarArtistTracks as $data){
+			$youtube = new YouTube();
+			//$movieId = $youtube->getTrackMovieId($data['artist'],$data['track']);
+			$movieId = "test";
+			if($movieId != NULL){
+				$data += array('movieId' => $movieId);
+				$result[] = $data;
+				$cnt++;
+				if( $cnt > $limit ) break;
+			}
+		}
+		return $result;
+	}
+
+	/**
 	 * アーティストの似たアーティストの曲を返却する。
 	 */
-	public function index(){
+	public function index($artistName){
 		// 引数を受け取って、情報を取得して表示
-		$tmp = date('Y-m-d', strtotime('-3 month'));
-		//$this->check("BUMP OF CHICKEN");
-		$artist = new Artist();
-		var_dump($artist->doUpdateWithSimilarArtist("TOFUBEATS"));
-		//$artist = Artist::where('name',"BUMP OF CHICKEN")->first();
-		//var_dump($artist->id);
-		//return $tmp;
+		//echo "<pre>";
+		//print_r();
+		//echo "</pre>";
+		$tmp = $this->similarArtistTracksAddMovie($this->getSimilarArtistTrack($artistName),5);
+		//$tmp = $this->getSimilarArtistTrack($artistName);
+
+		echo "<pre>";
+		print_r($tmp);
+		echo "</pre>";
 	}
 }
