@@ -14,10 +14,11 @@ use Illuminate\Http\Request;
 */
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+	return $request->user();
 });
 Route::group(['namespace' => 'Api'], function () {
-    Route::prefix('v1')->group(function () {
-        Route::get('/similar', 'SimilarArtistTrackController@index');
-    });
+	Route::prefix('v1')->group(function () {
+		Route::get('/artist/{artist}/similar', 'SimilarArtistTrackController@index');
+		Route::post('/artist/{artist}'       , 'SimilarArtistTrackController@update');
+	});
 });
