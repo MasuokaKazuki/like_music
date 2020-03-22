@@ -21,12 +21,12 @@ class Lastfm{
 	/**
 	 * Last.fm APIから似たアーティストを取得する。
 	 */
-	public function getArtistSimilar($artistName=""){
+	public function getArtistSimilar($artistName="",$limit=15){
 		if( $artistName=="" ) return NULL;
 
 		$urlQuery['method'] = 'artist.getsimilar';
 		$urlQuery['artist'] = $artistName;
-		$urlQuery['limit' ] = 10;
+		$urlQuery['limit' ] = $limit;
 		$url = $this->createApiUrl($urlQuery);
 
 		return $this->getApiToArray($url);
@@ -35,12 +35,12 @@ class Lastfm{
 	/**
 	 * Last.fm APIからトップトラックを取得する。
 	 */
-	public function getTrack($artistName=""){
+	public function getTrack($artistName="",$limit=5){
 		if( $artistName=="" ) return NULL;
 
 		$urlQuery['method'] = 'artist.gettoptracks';
 		$urlQuery['artist'] = $artistName;
-		$urlQuery['limit' ] = 10;
+		$urlQuery['limit' ] = $limit;
 		$url = $this->createApiUrl($urlQuery);
 
 		return $this->getApiToArray($url);
@@ -66,6 +66,40 @@ class Lastfm{
 			$result = json_decode($response,true);
 		}
 		return $result;
+	}
+
+	/**
+	 *  似たアーティストの曲情報をAPIから取得し結合して、返却する
+	 */
+	public function getSimilarArtistTrack($artistName=""){
+		$time_start = microtime(true);
+		
+		$similarArtistTracks = array();
+		$apiSimilarArtist = $this->getArtistSimilar($artistName);	// 似たアーティスト取得する
+
+		$time = microtime(true) - $time_start;
+		echo "<p>似たアーティストの取得{$time} 秒</p>";
+
+		if(isset($apiSimilarArtist["similarartists"]["artist"]) && is_array($apiSimilarArtist["similarartists"]["artist"])){
+			$arrSimilarArtist = $apiSimilarArtist["similarartists"]["artist"];
+
+			foreach($arrSimilarArtist as $similarArtist){
+				$artistName  = $similarArtist["name"];
+				$artistTrack = $this->getTrack($artistName);
+				
+				if(isset($artistTrack["toptracks"]["track"]) && is_array($artistTrack["toptracks"]["track"])){
+					$arrTrack = $artistTrack["toptracks"]["track"];
+					foreach($arrTrack as $track){
+						$similarArtistTracks[] = array('artist'=>$artistName, 'track'=>$track["name"]);
+					}
+				}
+			}
+		}
+		$time = microtime(true) - $time_start;
+		echo "<p>トラックの取得と結合の取得{$time} 秒</p>";
+
+		if(is_array($similarArtistTracks)) shuffle($similarArtistTracks);
+		return $similarArtistTracks;
 	}
 
 	/**

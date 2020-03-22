@@ -34,9 +34,14 @@ class Artist extends Model
 		$exists = Artist::where('name',$artistName)
 						->whereDate('updated_at', '>', date('Y-m-d', strtotime('-1 month')))
 						->exists();
+		
 		return ( $exists ) ? false : true ;
 	}
 
+	/**
+	 * アーティスト情報のアップデートする。
+	 * 似たアーティスト情報も併せて、更新を行う。
+	 */
 	public function doUpdateWithSimilarArtist($artistName=""){
 		$this->doUpdate($artistName, true);
 	}
@@ -47,9 +52,9 @@ class Artist extends Model
 	 * ・Track ... 楽曲情報
 	 * ・SimilarArtist ... 似たアーティスト
 	 * @param $artistName アーティスト名
-	 * @param $withSimilar 似たアーティストも更新するかどうか
+	 * @param $similarUpdate 似たアーティストも更新するかどうか
 	 */
-	public function doUpdate($artistName="",$withSimilar=false){
+	public function doUpdate($artistName="",$similarUpdate=false){
 		$lastfm = new Lastfm();
 		$apiArtist = $lastfm->getArtist($artistName);
 
@@ -64,13 +69,12 @@ class Artist extends Model
 
 				$track = new Track();
 				$track->doUpdate($apiArtistName);
-
 				$artist->touch();
 			}
 
 			$similarArtist = new SimilarArtist();
 
-			if( $withSimilar && ( $this->shouldUpdate($apiArtistName) || !$similarArtist->hasSimilarArtist($apiArtistName) ) ){
+			if( $similarUpdate && !$similarArtist->hasSimilarArtist($apiArtistName) ){
 				$similarArtist->doUpdate($apiArtistName);
 			}
 		}
