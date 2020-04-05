@@ -18,7 +18,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::group(['namespace' => 'Api'], function () {
 	Route::prefix('v1')->group(function () {
-		Route::get('/artist/{artist}/similar', 'SimilarArtistTrackController@index');
-		Route::post('/artist/{artist}'       , 'SimilarArtistTrackController@update');
+		Route::get ('/artist/{name}              ', 'ArtistController@index'            );
+		Route::post('/artist'                     , 'ArtistController@update'           );
+		Route::get ('/artist/{name}/similarTrack' , 'SimilarArtistTrackController@index');
 	});
 });

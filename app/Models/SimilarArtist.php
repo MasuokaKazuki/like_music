@@ -57,25 +57,9 @@ class SimilarArtist extends Model
 	}
 
 	/**
-	 * 似たアーティストの情報を取得する
-	 * DBに存在する ... DBから取得
-	 * DBに存在しない ... lastfmから取得
-	 */
-	public function getSimilarArtistTrack($artistName=""){
-		$similarArtistTracks = $this->getSimilarArtistTrackByDB($artistName);
-
-		if(empty($similarArtistTracks)){
-			$lastfm = new Lastfm();
-			$similarArtistTracks = $lastfm->getSimilarArtistTrack($artistName);
-		}
-
-		return $similarArtistTracks;
-	}
-
-	/**
 	 * 似たアーティストの情報を取得する(DBに格納のデータから)
 	 */
-	private function getSimilarArtistTrackByDB($artistName=""){
+	public function getSimilarArtistTrack($artistName=""){
 		$similarArtistTracks = array();
 
 		$artist = Artist::where('name',$artistName)->first();
@@ -87,7 +71,7 @@ class SimilarArtist extends Model
 				$arrTracks = $artist->traks;
 
 				foreach($arrTracks as $track){
-					$similarArtistTracks[] = array('artist'=>$artist->name, 'track'=>$track->name, 'videoId'=>$track->youtube_video_id);
+					$similarArtistTracks[] = array('artist'=>$artist->name, 'track'=>$track->name, 'video_id'=>$track->youtube_video_id);
 				}
 			}
 
