@@ -60,7 +60,7 @@ class Lastfm{
 	 * APIからデータを取得して、配列に変換して返却する
 	 */
 	private function getApiToArray($url=""){
-		$result = "";
+		$result = NULL;
 		if( $url != "" ){
 			$response = file_get_contents($url);
 			$result = json_decode($response,true);
@@ -71,21 +71,21 @@ class Lastfm{
 	/**
 	 *  似たアーティストの曲情報をAPIから取得し結合して、返却する
 	 */
-	public function getSimilarArtistTrack($artistName=""){
+	public function getSimilarArtistTrack($artistName="",$artistLimit=15,$trackLimit=5){
 		$time_start = microtime(true);
 		
 		$similarArtistTracks = array();
-		$apiSimilarArtist = $this->getArtistSimilar($artistName);	// 似たアーティスト取得する
+		$apiSimilarArtist = $this->getArtistSimilar($artistName,$artistLimit);	// 似たアーティスト取得する
 
 		$time = microtime(true) - $time_start;
-		echo "<p>似たアーティストの取得{$time} 秒</p>";
+		//echo "<p>似たアーティストの取得{$time} 秒</p>";
 
 		if(isset($apiSimilarArtist["similarartists"]["artist"]) && is_array($apiSimilarArtist["similarartists"]["artist"])){
 			$arrSimilarArtist = $apiSimilarArtist["similarartists"]["artist"];
 
 			foreach($arrSimilarArtist as $similarArtist){
 				$artistName  = $similarArtist["name"];
-				$artistTrack = $this->getTrack($artistName);
+				$artistTrack = $this->getTrack($artistName,$trackLimit);
 				
 				if(isset($artistTrack["toptracks"]["track"]) && is_array($artistTrack["toptracks"]["track"])){
 					$arrTrack = $artistTrack["toptracks"]["track"];
@@ -96,7 +96,7 @@ class Lastfm{
 			}
 		}
 		$time = microtime(true) - $time_start;
-		echo "<p>トラックの取得と結合の取得{$time} 秒</p>";
+		//echo "<p>トラックの取得と結合の取得{$time} 秒</p>";
 
 		if(is_array($similarArtistTracks)) shuffle($similarArtistTracks);
 		return $similarArtistTracks;

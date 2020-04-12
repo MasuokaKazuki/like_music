@@ -54,7 +54,7 @@ class GoogleCustomSearch{
 	 * APIからデータを取得して、配列に変換して返却する
 	 */
 	private function getApiToArray($url=""){
-		$result = "";
+		$result = NULL;
 		if( $url != "" ){
 			$response = file_get_contents($url);
 			$result = json_decode($response,true);
