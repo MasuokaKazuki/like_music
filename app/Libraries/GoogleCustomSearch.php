@@ -20,13 +20,14 @@ class GoogleCustomSearch{
 				if( ( stristr($title, $artistName) != FALSE ) && 
 					( stristr($title, $trackName ) != FALSE ) &&
 					( stristr($url  , "https://www.youtube.com/watch?v=" ) != FALSE ) ){
+						$trackMovieData['id'] = $this->extractVideoId($url);
+						$trackMovieData['thumbnail'] = $this->getThumbnail($item);
+						return $trackMovieData;
 				}
-				$trackMovieData['id'] = $this->extractVideoId($url);
-				$trackMovieData['thumbnail'] = "";
 			}
 		}
 
-		return $trackMovieData;
+		return null;
 	}
 
 	/**
@@ -38,6 +39,20 @@ class GoogleCustomSearch{
 		$tmp = explode( "&", $tmp );
 		if( isset($tmp[0]) ) $videoId = $tmp[0];
 		return $videoId;
+	}
+
+	/**
+	 * CSEから取得した配列データからサムネイル画像のデータを取得する。
+	 */
+	private function getThumbnail($item=null){
+		$thumbnail = "";
+		if(isset($item) && isset($item['pagemap']['cse_thumbnail'][0]['src'])){
+			$thumbnail = $item['pagemap']['cse_thumbnail'][0]['src'];
+
+		}else if(isset($item) && isset($item['pagemap']['imageobject'][0]['url'])){
+			$thumbnail = $item['pagemap']['imageobject'][0]['url'];
+		}
+		return $thumbnail;
 	}
 
 	/**
@@ -62,7 +77,6 @@ class GoogleCustomSearch{
 		$urlQuery['num'] = 3;
 
 		$url = $this->createApiUrl($urlQuery);
-		
 		return $this->getApiToArray($url);
 	}
 	

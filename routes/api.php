@@ -22,6 +22,6 @@ Route::group(['namespace' => 'Api'], function () {
 		Route::post('/artist'                          , 'ArtistController@update'           );
 		Route::get ('/artist/{name}/similarTrack'      , 'SimilarArtistTrackController@index');
 		Route::get ('/lastfm/{artist}/similarTrack'    , 'LastfmController@index');
-		Route::get ('/youtube/{artist}/{track}/videoId', 'YoutubeController@index');
+		Route::get ('/youtube/{artist}/{track}'        , 'YoutubeController@index');
 	});
 });

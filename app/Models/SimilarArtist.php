@@ -79,32 +79,4 @@ class SimilarArtist extends Model
 		}
 		return $similarArtistTracks;
 	}
-
-	/**
-	 * 似たアーティストの曲にyoutubeの動画URL情報を付与する。
-	 */
-	public function similarArtistTracksAddMovieUrl(array $similarArtistTracks,int $limit=10){
-		$time_start = microtime(true);
-
-		$result = array();
-		$cnt = 1;
-		$cse = new GoogleCustomSearch();
-
-		foreach($similarArtistTracks as $data){
-			$time = microtime(true) - $time_start;
-			echo "<p>getTrackMovieUrl - start{$time} 秒</p>";
-			$url = $cse->getTrackMovieId($data['artist'],$data['track']);
-			$time = microtime(true) - $time_start;
-			echo "<p>getTrackMovieUrl - end{$time} 秒</p>";
-
-			if($url != NULL){
-				$data += array('url' => $url);
-				$result[] = $data;
-				$cnt++;
-				if( $cnt > $limit ) break;
-			}
-		}
-
-		return $result;
-	}
 }

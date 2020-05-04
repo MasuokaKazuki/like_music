@@ -34,8 +34,17 @@ class Track extends Model
                     $track->artist_id  = $artist->id;
                     $track->name       = $trackName;
                     $track->play_count = $apiData["playcount"];
-					$track->youtube_video_id  = $cse->getTrackMovieId($artist->name,$trackName);
-					$track->youtube_thumbnail = "test";
+
+					$trackMovie = $cse->getTrackMovieData($artistName,$trackName);
+					if(isset($trackMovie)){
+						$videoId    = $trackMovie['id'];
+						$thumbnail  = $trackMovie['thumbnail'];
+					}else{
+						continue;
+					}
+
+					$track->youtube_video_id  = $videoId;
+					$track->youtube_thumbnail = $thumbnail;
                     $track->save();
 				}
 			}
