@@ -10,12 +10,6 @@ use Illuminate\Http\Request;
 class ArtistController extends Controller
 {
 	/**
-	 * アーティストの似たアーティストの曲を返却する。
-	 */
-	public function index($artistName){
-	}
-
-	/**
 	 * アーティストの似たアーティスト情報を更新する。
 	 */
 	public function update(Request $request){
