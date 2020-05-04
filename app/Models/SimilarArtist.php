@@ -93,7 +93,7 @@ class SimilarArtist extends Model
 		foreach($similarArtistTracks as $data){
 			$time = microtime(true) - $time_start;
 			echo "<p>getTrackMovieUrl - start{$time} 秒</p>";
-			$url = $cse->getTrackMovieUrl($data['artist'],$data['track']);
+			$url = $cse->getTrackMovieId($data['artist'],$data['track']);
 			$time = microtime(true) - $time_start;
 			echo "<p>getTrackMovieUrl - end{$time} 秒</p>";
 

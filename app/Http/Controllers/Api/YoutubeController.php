@@ -13,7 +13,7 @@ class YoutubeController extends Controller
 	 */
 	public function index($artistName,$trackName){
 		$cse = new GoogleCustomSearch();
-		$tmp = $cse->getTrackMovieUrl($artistName,$trackName);
+		$tmp = $cse->getTrackMovieId($artistName,$trackName);
 		return response()->json(['video_id' => $tmp]);
 	}
 }
