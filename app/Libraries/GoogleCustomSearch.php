@@ -7,10 +7,10 @@ class GoogleCustomSearch{
 	/**
 	 * Google Custom Search APIからアーティスト+トラック名検索した結果合致したもののURLを返却する。
 	 */
-	public function getTrackMovieUrl($artistName="",$trackName=""){
+	public function getTrackMovie($artistName="",$trackName=""){
 		if( $artistName=="" || $trackName=="") return NULL;
 
-		$searchResult = $this->getTrackSearchResule($artistName,$trackName);
+		$searchResult = $this->getTrackSearchResult($artistName,$trackName);
 
 		if(isset($searchResult['items'])){
 			foreach($searchResult['items'] as $item){
@@ -29,7 +29,7 @@ class GoogleCustomSearch{
 	/**
 	 * Google Custom Search APIからアーティスト+トラック名で検索した結果を取得する。
 	 */
-	public function getTrackSearchResule($artistName="",$trackName=""){
+	public function getTrackSearchResult($artistName="",$trackName=""){
 		if( $artistName=="" || $trackName=="") return NULL;
 
 		$urlQuery['q'  ] = $artistName." ".$trackName;
