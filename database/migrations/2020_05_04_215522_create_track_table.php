@@ -17,7 +17,8 @@ class CreateTrackTable extends Migration
             $table->increments('id');
             $table->integer('artist_id');
             $table->string('name');
-            $table->text('youtube_url');
+            $table->text('youtube_video_id');
+            $table->text('youtube_thumbnail');
             $table->integer('play_count');
             $table->timestamps();
         });
