@@ -68,10 +68,15 @@ class SimilarArtist extends Model
 
 			foreach($arrSimilarArtist as $similarArtist){
 				$artist = Artist::find($similarArtist->similar_artist_id);
-				$arrTracks = $artist->traks;
+				$arrTracks = $artist->tracks;
 
 				foreach($arrTracks as $track){
-					$similarArtistTracks[] = array('artist'=>$artist->name, 'track'=>$track->name, 'video_id'=>$track->youtube_video_id);
+					$similarArtistTracks[] = array(
+						'artist'   => $artist->name,
+						'track'    => $track->name,
+						'video_id' => $track->youtube_video_id,
+						'video_thumbnail' => $track->youtube_thumbnail,
+					);
 				}
 			}
 

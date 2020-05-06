@@ -21,7 +21,7 @@ class Artist extends Model
 	/**
 	 * アーティストの曲情報を取得する
 	 */
-	public function traks(){
+	public function tracks(){
 		return $this->hasMany('App\Models\Track','artist_id');
     }
 
