@@ -1,0 +1,53 @@
+.top-page {
+  background: #222 url(/common/image/top-mainvisual.jpg) no-repeat center 35%;
+  background-size: 90% auto;
+}
+
+.top-content {
+  position: absolute;
+  top: 30%;
+  left: 40%;
+  width: 25%;
+  color: #fff;
+  text-align: center;
+}
+
+.top-content__catch {
+  font-size: 12px;
+  margin-bottom: 10%;
+}
+
+.search__input {
+  width: 92%;
+  padding: 4%;
+  font-size: 16px;
+  border: none;
+  border-radius: 14px;
+  opacity: 0.6;
+  text-align: center;
+}
+
+.search__button {
+  width: 100%;
+}
+
+.search input {
+  color: #222;
+}
+
+.search input::-webkit-input-placeholder {
+  color: #444;
+}
+
+.search input:-ms-input-placeholder {
+  color: #444;
+}
+
+.search input::-ms-input-placeholder {
+  color: #444;
+}
+
+.search input::placeholder {
+  color: #444;
+}
+/*# sourceMappingURL=main.css.map */
