@@ -18,3 +18,7 @@ Route::get('/test/update/post', function () {
 Route::get('/', function () {
     return view('index');
 });
+
+Route::get('/similar/tracks', function () {
+    return view('similar_tracks');
+});
