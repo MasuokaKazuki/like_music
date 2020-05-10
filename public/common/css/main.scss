@@ -233,7 +233,14 @@
         text-align: center;
         &::placeholder {
             color: #444;
-        }  
+        }
+        &--error{
+            box-shadow: 3px 3px 30px #F5000029;
+            border: 1px solid #FF0000;
+        }
+        &--error::placeholder {
+            color: #FF0000;
+        }
     }
 
     &__button{

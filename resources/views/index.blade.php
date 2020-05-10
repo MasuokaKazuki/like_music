@@ -18,6 +18,7 @@
             <div class="search">
                 <form action="#" method="get">
                     <input class="search__input" type="text" name="artist" placeholder="好きなアーティスト名を入力して探そう" />
+                    <input class="search__input search__input--error" type="text" name="artist" placeholder="アーティスト名を入力して下さい" />
                     <button type="submit" class="search__button">
                         見つける <i class="fa fa-search"></i>
                     </button>

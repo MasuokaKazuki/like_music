@@ -246,6 +246,28 @@
   color: #444;
 }
 
+.search__input--error {
+  -webkit-box-shadow: 3px 3px 30px #F5000029;
+          box-shadow: 3px 3px 30px #F5000029;
+  border: 1px solid #FF0000;
+}
+
+.search__input--error::-webkit-input-placeholder {
+  color: #FF0000;
+}
+
+.search__input--error:-ms-input-placeholder {
+  color: #FF0000;
+}
+
+.search__input--error::-ms-input-placeholder {
+  color: #FF0000;
+}
+
+.search__input--error::placeholder {
+  color: #FF0000;
+}
+
 .search__button {
   width: 100%;
   padding: 3% 0;
