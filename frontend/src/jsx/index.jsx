@@ -20,7 +20,7 @@ class PlayList extends React.Component {
   render () {
     return (
       <section className="playlist">
-        <Track/>
+        <Track name="ばらの花×ネイティブダンサー" artist="yui（FLOWER FLOWER）とミゾベリョウ（odol）" image="" />
         <div className="track track--current">
           <div className="track__image track__image--circled">
             <img src="" width="85" alt="アーティスト画像" />
@@ -28,31 +28,29 @@ class PlayList extends React.Component {
           <div className="track__name">ばらの花×ネイティブダンサー</div>
           <div className="track__artist">yui（FLOWER FLOWER）とミゾベリョウ（odol）</div>
         </div>
-        <Track/>
-        <Track/>
-        <Track/>
-        <Track/>
-        <Track/>
-        <Track/>
-        <Track/>
-        <Track/>
+        <Track name="ばらの花×ネイティブダンサー" artist="yui（FLOWER FLOWER）とミゾベリョウ（odol）" image="" />
+        <Track name="ばらの花×ネイティブダンサー" artist="yui（FLOWER FLOWER）とミゾベリョウ（odol）" image="" />
+        <Track name="ばらの花×ネイティブダンサー" artist="yui（FLOWER FLOWER）とミゾベリョウ（odol）" image="" />
+        <Track name="ばらの花×ネイティブダンサー" artist="yui（FLOWER FLOWER）とミゾベリョウ（odol）" image="" />
+        <Track name="ばらの花×ネイティブダンサー" artist="yui（FLOWER FLOWER）とミゾベリョウ（odol）" image="" />
+        <Track name="ばらの花×ネイティブダンサー" artist="yui（FLOWER FLOWER）とミゾベリョウ（odol）" image="" />
+        <Track name="ばらの花×ネイティブダンサー" artist="yui（FLOWER FLOWER）とミゾベリョウ（odol）" image="" />
+        <Track name="ばらの花×ネイティブダンサー" artist="yui（FLOWER FLOWER）とミゾベリョウ（odol）" image="" />
       </section>
     );
   }
 }
 
-class Track extends React.Component {
-  render () {
+const Track = (props) => {
     return (
       <div className="track">
         <div className="track__image track__image--circled">
-          <img src="" width="85" alt="アーティスト画像" />
+          <img src={props.image} width="85" alt={props.name} />
         </div>
-        <div className="track__name">ばらの花×ネイティブダンサー</div>
-        <div className="track__artist">yui（FLOWER FLOWER）とミゾベリョウ（odol）</div>
+        <div className="track__name">{props.name}</div>
+        <div className="track__artist">{props.artist}</div>
       </div>
     );
-  }
 }
 
 class SearchButton extends React.Component {
