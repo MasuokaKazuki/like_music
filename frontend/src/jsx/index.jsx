@@ -1,23 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {render} from 'react-dom';
 import '../scss/main.scss';
 
-class VideoArea extends React.Component {
-  render () {
+const VideoArea = (props) => {
     return (
-      <div className="video-area">
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/F6_zbnfxoBA" frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-      </div>
+        <div className="video-area">
+            <iframe width="560" height="315" src={"https://www.youtube.com/embed/" + props.value} frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+        </div>
     );
-  }
-}
+};
 
-class ListTitle extends React.Component {
-  render () {
+const ListTitle = (props) => {
     return (
-      <h1 className="list-title">ASIAN KUNG-FU GENERATIONに近いアーティストのプレイリスト</h1>
+      <h1 className="list-title">{props.value}に近いアーティストのプレイリスト</h1>
     );
-  }
 }
 
 class PlayList extends React.Component {
@@ -67,74 +63,15 @@ class SearchButton extends React.Component {
   }
 }
 
-class App extends React.Component {
-  render () {
+const App = (props) => {
     return (
       <div className="search-result-page">
-        <VideoArea/>
-        <ListTitle/>
-        <section className="playlist">
-            <div className="track"> 
-                <div className="track__image track__image--circled">
-                    <img src="" width="85" alt="アーティスト画像" />
-                </div>
-                <div className="track__name">ばらの花×ネイティブダンサー</div>
-                <div className="track__artist">yui（FLOWER FLOWER）とミゾベリョウ（odol）とくるりとサカナクション</div>
-            </div>
-            <div className="track track--current">
-                <div className="track__image track__image--circled">
-                    <img src="" width="85" alt="アーティスト画像" />
-                </div>
-                <div className="track__name">ばらの花×ネイティブダンサー</div>
-                <div className="track__artist">yui（FLOWER FLOWER）とミゾベリョウ（odol）</div>
-            </div>
-            <div className="track">
-                <div className="track__image track__image--circled">
-                    <img src="" width="85" alt="アーティスト画像" />
-                </div>
-                <div className="track__name">ばらの花×ネイティブダンサー</div>
-                <div className="track__artist">yui（FLOWER FLOWER）とミゾベリョウ（odol）</div>
-            </div>
-            <div className="track">
-                <div className="track__image track__image--circled">
-                    <img src="" width="85" alt="アーティスト画像" />
-                </div>
-                <div className="track__name">ばらの花×ネイティブダンサー</div>
-                <div className="track__artist">yui（FLOWER FLOWER）とミゾベリョウ（odol）</div>
-            </div>
-            <div className="track">
-                <div className="track__image track__image--circled">
-                    <img src="" width="85" alt="アーティスト画像" />
-                </div>
-                <div className="track__name">ばらの花×ネイティブダンサー</div>
-                <div className="track__artist">yui（FLOWER FLOWER）とミゾベリョウ（odol）</div>
-            </div>
-            <div className="track">
-                <div className="track__image track__image--circled">
-                    <img src="" width="85" alt="アーティスト画像" />
-                </div>
-                <div className="track__name">ばらの花×ネイティブダンサー</div>
-                <div className="track__artist">yui（FLOWER FLOWER）とミゾベリョウ（odol）</div>
-            </div>
-            <div className="track">
-                <div className="track__image track__image--circled">
-                    <img src="" width="85" alt="アーティスト画像" />
-                </div>
-                <div className="track__name">ばらの花×ネイティブダンサー</div>
-                <div className="track__artist">yui（FLOWER FLOWER）とミゾベリョウ（odol）</div>
-            </div>
-            <div className="track">
-                <div className="track__image track__image--circled">
-                    <img src="" width="85" alt="アーティスト画像" />
-                </div>
-                <div className="track__name">ばらの花×ネイティブダンサー</div>
-                <div className="track__artist">yui（FLOWER FLOWER）とミゾベリョウ（odol）</div>
-            </div>
-        </section>
+        <VideoArea value="F6_zbnfxoBA" />
+        <ListTitle value="ASIAN KUNG-FU GENERATION"/>
+        <PlayList/>
         <SearchButton/>
       </div>
     );
-  }
 }
 
 render(<App/>, document.getElementById('app'));
