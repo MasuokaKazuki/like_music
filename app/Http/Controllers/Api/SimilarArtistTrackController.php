@@ -17,6 +17,9 @@ class SimilarArtistTrackController extends Controller
 	public function index($artistName){
 		$similarArtist = new SimilarArtist();
 		$trackDataList = $similarArtist->getSimilarArtistTrack($artistName);
-		return response()->json(['similar_artist_track' => $trackDataList]);
+
+		$status = ( empty($trackDataList) ) ? 404 : 200 ;
+
+		return response()->json(['similar_artist_track' => $trackDataList], $status);
 	}
 }
