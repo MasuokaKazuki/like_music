@@ -17,40 +17,30 @@ const ListTitle = (props) => {
     );
 }
 
-class PlayList extends React.Component {
-    render () {
+const PlayList = (props) => {
+    if (props.list.map) {
         return (
-        <section className="playlist">
-            <Track name="ばらの花×ネイティブダンサー" artist="yui（FLOWER FLOWER）とミゾベリョウ（odol）" image="" />
-            <div className="track track--current">
-            <div className="track__image track__image--circled">
-                <img src="" width="85" alt="アーティスト画像" />
-            </div>
-            <div className="track__name">ばらの花×ネイティブダンサー</div>
-            <div className="track__artist">yui（FLOWER FLOWER）とミゾベリョウ（odol）</div>
-            </div>
-            <Track name="ばらの花×ネイティブダンサー" artist="yui（FLOWER FLOWER）とミゾベリョウ（odol）" image="" />
-            <Track name="ばらの花×ネイティブダンサー" artist="yui（FLOWER FLOWER）とミゾベリョウ（odol）" image="" />
-            <Track name="ばらの花×ネイティブダンサー" artist="yui（FLOWER FLOWER）とミゾベリョウ（odol）" image="" />
-            <Track name="ばらの花×ネイティブダンサー" artist="yui（FLOWER FLOWER）とミゾベリョウ（odol）" image="" />
-            <Track name="ばらの花×ネイティブダンサー" artist="yui（FLOWER FLOWER）とミゾベリョウ（odol）" image="" />
-            <Track name="ばらの花×ネイティブダンサー" artist="yui（FLOWER FLOWER）とミゾベリョウ（odol）" image="" />
-            <Track name="ばらの花×ネイティブダンサー" artist="yui（FLOWER FLOWER）とミゾベリョウ（odol）" image="" />
-            <Track name="ばらの花×ネイティブダンサー" artist="yui（FLOWER FLOWER）とミゾベリョウ（odol）" image="" />
-        </section>
+            <section className="playlist">
+                {props.list.map((item,i) => (
+                    <Track key={i} name={item.track} artist={item.artist} image={item.video_thumbnail} current={i == 0 ? true : false} />
+                ))}
+            </section>
         );
+    }else{
+        return(<p>Loading...</p>);
     }
 }
 
 const Track = (props) => {
+    const currentClass = ( props.current == true ) ? ' track--current' : '' ;
     return (
-      <div className="track">
-        <div className="track__image track__image--circled">
-          <img src={props.image} width="85" alt={props.name} />
+        <div className={"track" + currentClass}>
+            <div className="track__image track__image--circled">
+                <img src={props.image} width="85" alt={props.name} />
+            </div>
+            <div className="track__name">{props.name}</div>
+            <div className="track__artist">{props.artist}</div>
         </div>
-        <div className="track__name">{props.name}</div>
-        <div className="track__artist">{props.artist}</div>
-      </div>
     );
 }
 
@@ -61,42 +51,47 @@ const SearchButton = () => {
 }
 
 const SearchResult = () =>{
+    const[searchArtist, setSearchArtist] = useState();
+    const[data, setData] = useState([]);
+
     useEffect(() => { 
         const params = new URLSearchParams(location.search);
         if(params && params.get("search")){
-           getApiData(params.get("search"));
+            getApiData(params.get("search"));
+            setSearchArtist(params.get("search"));
         }
     }, []);
 
     const getApiData = (artistName) => {
         axios.get('http://192.168.33.10/api/v1/artist/' + artistName + '/similarTrack')
             .then(
-                (results) => {
-                    console.log(result);
+                (result) => {
+                    setData(result.data.similar_artist_track);
                 }
             )
             .catch(
                 (error) => {
+                    setSearchArtist('');
                     console.log(error);
                 }
             );
     }
 
     return (
-        <div className="search-result-page">
-            <VideoArea value="F6_zbnfxoBA" />
-            <ListTitle value="ASIAN KUNG-FU GENERATION"/>
-            <PlayList/>
-            <SearchButton/>
-        </div>
+        <Suspense fallback={<p>Loading...</p>}>
+            <div className="search-result-page">
+                <VideoArea value="F6_zbnfxoBA" />
+                <ListTitle value={searchArtist}/>
+                <PlayList list={data}/>
+                <SearchButton/>
+            </div>
+        </Suspense>
     );
 }
 
 const App = (props) => {
     return (
-        <Suspense fallback={<p>Loading...</p>}>
-            <SearchResult/>
-        </Suspense>
+        <SearchResult/>
     );
 }
 
