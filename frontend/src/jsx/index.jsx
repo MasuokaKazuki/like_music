@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import {render} from 'react-dom';
 import axios from "axios";
 import '../scss/main.scss';
@@ -22,7 +22,7 @@ const PlayList = (props) => {
         return (
             <section className="playlist">
                 {props.list.map((item,i) => (
-                    <Track key={i} name={item.track} artist={item.artist} image={item.video_thumbnail} current={i == 0 ? true : false} />
+                    <Track key={i} index={i} name={item.track} artist={item.artist} image={item.video_thumbnail} />
                 ))}
             </section>
         );
@@ -32,15 +32,29 @@ const PlayList = (props) => {
 }
 
 const Track = (props) => {
-    const currentClass = ( props.current == true ) ? ' track--current' : '' ;
+    const[currentIndex, setCurrentIndex] = useState(0);
+    const[currentClass, setCurrentClass] = useState('');
+
+    useEffect(() => { 
+        if( props.index == currentIndex ){
+            setCurrentClass(' track--current');
+        }
+    }, []);
+
+    const play = (e) =>{
+        setCurrentIndex(e.currentTarget.getAttribute("data-index"));
+    }
+
     return (
-        <div className={"track" + currentClass}>
-            <div className="track__image track__image--circled">
-                <img src={props.image} width="85" alt={props.name} />
+        <a href="#" onClick={play} data-index={props.index}>
+            <div className={"track" + currentClass}> 
+                <div className="track__image track__image--circled">
+                    <img src={props.image} width="85" alt={props.name} />
+                </div>
+                <div className="track__name">{props.name}</div>
+                <div className="track__artist">{props.artist}</div>
             </div>
-            <div className="track__name">{props.name}</div>
-            <div className="track__artist">{props.artist}</div>
-        </div>
+        </a>
     );
 }
 
@@ -53,6 +67,7 @@ const SearchButton = () => {
 const SearchResult = () =>{
     const[searchArtist, setSearchArtist] = useState();
     const[data, setData] = useState([]);
+    const[isLoding, setIsLoding] = useState(false);
 
     useEffect(() => { 
         const params = new URLSearchParams(location.search);
@@ -67,6 +82,7 @@ const SearchResult = () =>{
             .then(
                 (result) => {
                     setData(result.data.similar_artist_track);
+                    setIsLoding(true);
                 }
             )
             .catch(
@@ -77,16 +93,20 @@ const SearchResult = () =>{
             );
     }
 
-    return (
-        <Suspense fallback={<p>Loading...</p>}>
+    if (isLoding && data[0]) {
+        return (
             <div className="search-result-page">
-                <VideoArea value="F6_zbnfxoBA" />
+                <VideoArea value={data[0].video_id} />
                 <ListTitle value={searchArtist}/>
                 <PlayList list={data}/>
                 <SearchButton/>
             </div>
-        </Suspense>
-    );
+        );
+    }else{
+        return(
+            <p>now loading...</p>
+        );
+    }
 }
 
 const App = (props) => {
