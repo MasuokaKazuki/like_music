@@ -18,11 +18,19 @@ const ListTitle = (props) => {
 }
 
 const PlayList = (props) => {
+    const[currentIndex, setCurrentIndex] = useState(0);
+
+    const play = (e) =>{
+        setCurrentIndex(e.currentTarget.getAttribute("data-index"));
+    }
+
     if (props.list.map) {
         return (
             <section className="playlist">
                 {props.list.map((item,i) => (
-                    <Track key={i} index={i} name={item.track} artist={item.artist} image={item.video_thumbnail} />
+                    <a href="#" key={i} data-index={i} onClick={play}>
+                        <Track name={item.track} artist={item.artist} image={item.video_thumbnail} current={i == currentIndex ? true : false} />
+                    </a>
                 ))}
             </section>
         );
@@ -32,29 +40,15 @@ const PlayList = (props) => {
 }
 
 const Track = (props) => {
-    const[currentIndex, setCurrentIndex] = useState(0);
-    const[currentClass, setCurrentClass] = useState('');
-
-    useEffect(() => { 
-        if( props.index == currentIndex ){
-            setCurrentClass(' track--current');
-        }
-    }, []);
-
-    const play = (e) =>{
-        setCurrentIndex(e.currentTarget.getAttribute("data-index"));
-    }
-
+    const currentClass = ( props.current == true ) ? ' track--current' : '' ;
     return (
-        <a href="#" onClick={play} data-index={props.index}>
-            <div className={"track" + currentClass}> 
-                <div className="track__image track__image--circled">
-                    <img src={props.image} width="85" alt={props.name} />
-                </div>
-                <div className="track__name">{props.name}</div>
-                <div className="track__artist">{props.artist}</div>
+        <div className={"track" + currentClass}> 
+            <div className="track__image track__image--circled">
+                <img src={props.image} width="85" alt={props.name} />
             </div>
-        </a>
+            <div className="track__name">{props.name}</div>
+            <div className="track__artist">{props.artist}</div>
+        </div>
     );
 }
 
