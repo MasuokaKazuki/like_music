@@ -17,28 +17,6 @@ const ListTitle = (props) => {
     );
 }
 
-const PlayList = (props) => {
-    const[currentIndex, setCurrentIndex] = useState(0);
-
-    const play = (e) =>{
-        setCurrentIndex(e.currentTarget.getAttribute("data-index"));
-    }
-
-    if (props.list.map) {
-        return (
-            <section className="playlist">
-                {props.list.map((item,i) => (
-                    <a href="#" key={i} data-index={i} onClick={play}>
-                        <Track name={item.track} artist={item.artist} image={item.video_thumbnail} current={i == currentIndex ? true : false} />
-                    </a>
-                ))}
-            </section>
-        );
-    }else{
-        return(<p>Loading...</p>);
-    }
-}
-
 const Track = (props) => {
     const currentClass = ( props.current == true ) ? ' track--current' : '' ;
     return (
@@ -60,8 +38,9 @@ const SearchButton = () => {
 
 const SearchResult = () =>{
     const[searchArtist, setSearchArtist] = useState();
-    const[data, setData] = useState([]);
-    const[isLoding, setIsLoding] = useState(false);
+    const[trackList   , setTrackList   ] = useState([]);
+    const[isLoding    , setIsLoding    ] = useState(false);
+    const[currentTrack, setCurrentTrack] = useState({ index: 0, videoId: "" });
 
     useEffect(() => { 
         const params = new URLSearchParams(location.search);
@@ -71,12 +50,23 @@ const SearchResult = () =>{
         }
     }, []);
 
+    const play = (e) =>{
+        setCurrentTrack({
+            index:   e.currentTarget.getAttribute("data-index"),
+            videoId: e.currentTarget.getAttribute("data-videoid")
+        });
+    }
+
     const getApiData = (artistName) => {
         axios.get('http://192.168.33.10/api/v1/artist/' + artistName + '/similarTrack')
             .then(
                 (result) => {
-                    setData(result.data.similar_artist_track);
+                    setTrackList(result.data.similar_artist_track);
                     setIsLoding(true);
+                    setCurrentTrack({
+                        index  : 0,
+                        videoId: result.data.similar_artist_track[0].video_id
+                    });
                 }
             )
             .catch(
@@ -87,12 +77,20 @@ const SearchResult = () =>{
             );
     }
 
-    if (isLoding && data[0]) {
+    if (isLoding && trackList[0]) {
         return (
             <div className="search-result-page">
-                <VideoArea value={data[0].video_id} />
+                <VideoArea value={currentTrack.videoId} />
                 <ListTitle value={searchArtist}/>
-                <PlayList list={data}/>
+
+                <section className="playlist">
+                    {trackList.map((item,i) => (
+                        <a href="#" key={i} data-index={i} data-videoid={item.video_id} onClick={play}>
+                            <Track name={item.track} artist={item.artist} image={item.video_thumbnail} current={i == currentTrack.index ? true : false} />
+                        </a>
+                    ))}
+                </section>
+
                 <SearchButton/>
             </div>
         );
