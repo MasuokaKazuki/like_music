@@ -1,12 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import {render} from 'react-dom';
 import axios from "axios";
+import YouTube from 'react-youtube';
 import '../scss/main.scss';
 
 const VideoArea = (props) => {
+    const opts ={
+        height: '560',
+        width: '560',
+        playerVars: {
+          autoplay: 1,
+          rel: 1,
+          origin: location.protocol + '//' + location.hostname + "/",
+          events: {
+            onStateChange: console.log("unk")
+          }
+        }
+    }
+
     return (
         <div className="video-area">
-            <iframe width="560" height="315" src={"https://www.youtube.com/embed/" + props.value} frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+            <YouTube videoId={props.value} opts={opts}/>
         </div>
     );
 };
