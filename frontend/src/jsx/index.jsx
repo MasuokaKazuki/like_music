@@ -4,27 +4,6 @@ import axios from "axios";
 import YouTube from 'react-youtube';
 import '../scss/main.scss';
 
-const VideoArea = (props) => {
-    const opts ={
-        height: '560',
-        width: '560',
-        playerVars: {
-          autoplay: 1,
-          rel: 1,
-          origin: location.protocol + '//' + location.hostname + "/",
-          events: {
-            onStateChange: console.log("unk")
-          }
-        }
-    }
-
-    return (
-        <div className="video-area">
-            <YouTube videoId={props.value} opts={opts}/>
-        </div>
-    );
-};
-
 const ListTitle = (props) => {
     return (
       <h1 className="list-title">{props.value}に近いアーティストのプレイリスト</h1>
@@ -76,11 +55,12 @@ const SearchResult = () =>{
             .then(
                 (result) => {
                     setTrackList(result.data.similar_artist_track);
-                    setIsLoding(true);
                     setCurrentTrack({
                         index  : 0,
                         videoId: result.data.similar_artist_track[0].video_id
                     });
+
+                    setIsLoding(true);
                 }
             )
             .catch(
@@ -91,10 +71,43 @@ const SearchResult = () =>{
             );
     }
 
+    const opts = {
+        height: '560',
+        width: '560',
+        playerVars: {
+          autoplay: 1,
+          modestbranding: 1,
+        }
+    }
+
+    const onPlayerStateChange = (e) => {
+        switch(e.data){
+            case YT.PlayerState.ENDED:
+                const nextIndex  = Number(currentTrack.index) + 1;
+                const nextTarget = document.querySelector('[data-index="' + nextIndex + '"]');
+                if(nextTarget){
+                    setCurrentTrack({
+                        index  : nextIndex,
+                        videoId: nextTarget.getAttribute("data-videoid")
+                    });
+                }
+                break;
+
+            case YT.PlayerState.PLAYING:
+            case YT.PlayerState.PAUSED:
+            case YT.PlayerState.BUFFERING:
+            case YT.PlayerState.CUED:
+                break;
+        }
+    }
+
     if (isLoding && trackList[0]) {
         return (
             <div className="search-result-page">
-                <VideoArea value={currentTrack.videoId} />
+                <div className="video-area">
+                    <YouTube videoId={currentTrack.videoId} opts={opts} onStateChange={onPlayerStateChange} />
+                </div>
+
                 <ListTitle value={searchArtist}/>
 
                 <section className="playlist">
