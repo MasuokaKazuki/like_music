@@ -6,14 +6,15 @@ body{
 
 @media screen and (min-width: 1024px) {
     .top-page{
-        background: #222 url(/common/image/top-mainvisual.jpg) no-repeat center 35%;
-        background-size: 95% auto;
+        background: #222 url(http://192.168.33.10/common/image/top-mainvisual.jpg) no-repeat center 35%;
+        background-size: 80% auto;
+        height: 100vh;
     }
 
     .top-content{
         position:absolute;
-        top: 35%;
-        left: 40%;
+        top: 28%;
+        left: 38%;
         width: 25%;
         color:#fff;
         text-align: center;
@@ -33,7 +34,7 @@ body{
     .video-area{
         position:fixed;
         width: 59%;
-        padding-top: 47%;
+        height: 100vh;
         float: left;
         iframe{
             position: absolute;
@@ -53,7 +54,7 @@ body{
 
     .playlist{
         width: 38%;
-        margin: 0 1% 1% 61%;
+        margin: 0 1% 1% 60.5%;
         padding: 1% 0 1% 0;
         background: #F6F8F8 0% 0% no-repeat;
         box-shadow: 3px 0px 10px #0C0C0C29;

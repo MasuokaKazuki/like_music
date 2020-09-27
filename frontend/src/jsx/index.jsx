@@ -29,6 +29,28 @@ const SearchButton = () => {
     );
 }
 
+const TopPage = () => {
+    return (
+        <div className="top-page">
+            <div className="top-content">
+                <div className="top-content__title">
+                    <img src="http://192.168.33.10/common/image/logo.svg" alt="Like Music" />
+                </div>
+                <div className="top-content__catch">キャッチコピーキャッチコピーキャッチコピーキャッチコピー</div>
+
+                <div className="search">
+                    <form action="#" method="get">
+                        <input className="search__input" type="text" name="search" placeholder="好きなアーティスト名を入力して探そう" />
+                        <button type="submit" className="search__button">
+                            見つける <i className="fa fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 const SearchResult = () =>{
     const[searchArtist, setSearchArtist] = useState();
     const[trackList   , setTrackList   ] = useState([]);
@@ -123,7 +145,7 @@ const SearchResult = () =>{
         );
     }else{
         return(
-            <p>now loading...</p>
+            <TopPage/>
         );
     }
 }
