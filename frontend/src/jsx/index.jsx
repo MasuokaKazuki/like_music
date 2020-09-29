@@ -29,7 +29,7 @@ const SearchButton = () => {
     );
 }
 
-const TopPage = () => {
+const TopPage = (prop) => {
     return (
         <div className="top-page">
             <div className="top-content">
@@ -40,7 +40,7 @@ const TopPage = () => {
 
                 <div className="search">
                     <form action="#" method="get">
-                        <input className="search__input" type="text" name="search" placeholder="好きなアーティスト名を入力して探そう" />
+                        <input className="search__input" type="text" name="search" value={prop.artist} placeholder="好きなアーティスト名を入力して探そう" />
                         <button type="submit" className="search__button">
                             見つける <i className="fa fa-search"></i>
                         </button>
@@ -145,7 +145,7 @@ const SearchResult = () =>{
         );
     }else{
         return(
-            <TopPage/>
+            <TopPage artist={searchArtist}/>
         );
     }
 }
