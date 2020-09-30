@@ -29,7 +29,9 @@ const SearchButton = () => {
     );
 }
 
-const TopPage = (prop) => {
+const TopPage = (props) => {
+    const errorClass = ( props.isError == true ) ? ' search__input--error' : '' ;
+
     return (
         <div className="top-page">
             <div className="top-content">
@@ -40,7 +42,7 @@ const TopPage = (prop) => {
 
                 <div className="search">
                     <form action="#" method="get">
-                        <input className="search__input" type="text" name="search" value={prop.artist} placeholder="好きなアーティスト名を入力して探そう" />
+                        <input className={"search__input" + errorClass} type="text" name="search" value={props.artist} placeholder={props.placeholder} />
                         <button type="submit" className="search__button">
                             見つける <i className="fa fa-search"></i>
                         </button>
@@ -143,16 +145,12 @@ const SearchResult = () =>{
                 <SearchButton/>
             </div>
         );
-    }else{
-        return(
-            <TopPage artist={searchArtist}/>
-        );
     }
 }
 
 const App = (props) => {
     return (
-        <SearchResult/>
+        <TopPage isError={true} placeholder="好きなアーティスト名を入力して探そう" />
     );
 }
 
