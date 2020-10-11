@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {render} from 'react-dom';
+import { BrowserRouter, Route, withRouter } from 'react-router-dom';
 import axios from "axios";
 import YouTube from 'react-youtube';
 import '../scss/main.scss';
@@ -29,30 +30,6 @@ const SearchButton = () => {
     );
 }
 
-const TopPage = (props) => {
-    const errorClass = ( props.isError == true ) ? ' search__input--error' : '' ;
-
-    return (
-        <div className="top-page">
-            <div className="top-content">
-                <div className="top-content__title">
-                    <img src="http://192.168.33.10/common/image/logo.svg" alt="Like Music" />
-                </div>
-                <div className="top-content__catch">キャッチコピーキャッチコピーキャッチコピーキャッチコピー</div>
-
-                <div className="search">
-                    <form action="#" method="get">
-                        <input className={"search__input" + errorClass} type="text" name="search" value={props.artist} placeholder={props.placeholder} />
-                        <button type="submit" className="search__button">
-                            見つける <i className="fa fa-search"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    );
-}
-
 const SearchResult = () =>{
     const[searchArtist, setSearchArtist] = useState();
     const[trackList   , setTrackList   ] = useState([]);
@@ -61,9 +38,9 @@ const SearchResult = () =>{
 
     useEffect(() => { 
         const params = new URLSearchParams(location.search);
-        if(params && params.get("search")){
-            getApiData(params.get("search"));
-            setSearchArtist(params.get("search"));
+        if(params && params.get("query")){
+            getApiData(params.get("query"));
+            setSearchArtist(params.get("query"));
         }
     }, []);
 
@@ -145,12 +122,45 @@ const SearchResult = () =>{
                 <SearchButton/>
             </div>
         );
+    }else{
+        return(
+            <p>残念だったな</p>
+        );
     }
+}
+
+const Test = () => {
+    const[detail, setDetail] = useState();
+    return(
+        <p data-index={detail}>test</p>
+    );
+}
+
+const TopPage = (props) => {
+    const errorClass = ( props.isError == true ) ? ' search__input--error' : '' ;
+
+    return (
+        <div className="top-page">
+            <div className="top-content">
+                <div className="top-content__title">
+                    <img src="http://192.168.33.10/common/image/logo.svg" alt="Like Music" />
+                </div>
+                <div className="top-content__catch">今ある好きから、新しい好きを探す音楽アプリ。</div>
+
+                <div className="search">
+                    <input className={"search__input" + errorClass} type="text" name="artist" value={props.artist} placeholder={props.placeholder} />
+                    <button className="search__button">
+                        見つける <i className="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
 }
 
 const App = (props) => {
     return (
-        <TopPage isError={true} placeholder="好きなアーティスト名を入力して探そう" />
+        <TopPage isError={false} placeholder="好きなアーティスト名を入力して探そう" />
     );
 }
 
