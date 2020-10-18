@@ -166,6 +166,7 @@ const TopPage = (props) => {
             .catch(
                 (error) => {
                     setIsError(true);
+                    setIsLoding(false);
                     alert("お探しのアーティストに関する情報は見つかりませんでした。");
                     console.log(error);
                 }
@@ -176,29 +177,31 @@ const TopPage = (props) => {
         let cnt = 0;
         let tracksData = [];
         for (let i = 0; i < trackList.length; ++i) {
-            await axios.get('http://192.168.33.10/api/v1/youtube/' + trackList[i].artist + '/' + trackList[i].track )
-                .then(
-                    (result) => {
-                        if(result.data.video_id && result.data.video_thumbnail){
-                            const tmp = {
-                                artist: trackList[i].artist,
-                                track: trackList[i].track,
-                                video_id: result.data.video_id,
-                                video_thumbnail: result.data.video_thumbnail,
+            if(trackList[i].artist && trackList[i].track){
+                await axios.get('http://192.168.33.10/api/v1/youtube/' + trackList[i].artist + '/' + trackList[i].track )
+                    .then(
+                        (result) => {
+                            if(result.data.video_id && result.data.video_thumbnail){
+                                const tmp = {
+                                    artist: trackList[i].artist,
+                                    track: trackList[i].track,
+                                    video_id: result.data.video_id,
+                                    video_thumbnail: result.data.video_thumbnail,
+                                }
+                                tracksData.push(tmp);
+                                cnt++;
                             }
-                            tracksData.push(tmp);
-                            cnt++;
                         }
-                    }
-                )
-                .catch(
-                    (error) => {
-                        console.log(error);
-                    }
-                );
-            if(cnt >= 15) break;
+                    )
+                    .catch(
+                        (error) => {
+                            console.log(error);
+                        }
+                    );
+                if(cnt >= 15) break;
+            }
         }
-        if(tracksData){
+        if(tracksData.length){
             props.history.push({
                 pathname: '/search',
                 state: { 
@@ -206,10 +209,13 @@ const TopPage = (props) => {
                     artistName: artistName,
                 }
             });
+        }else{
+            setIsLoding(false);
         }
     }
 
     let button;
+    let disabled;
     if (isLoding) {
         button = <div className="spinner">
                     <div className="rect1"></div>
@@ -218,10 +224,13 @@ const TopPage = (props) => {
                     <div className="rect4"></div>
                     <div className="rect5"></div>
                 </div>;
+        disabled = "disabled";
+
     } else {
         button = <button className="search__button" onClick={searchAction}>
                     見つける <i className="fa fa-search"></i>
                 </button>;
+        disabled = "";
     }
 
     return (
@@ -233,7 +242,7 @@ const TopPage = (props) => {
                 <div className="top-content__catch">今ある「好き」から、新しい「好き」を探す音楽アプリ。</div>
 
                 <div className="search">
-                    <input className={"search__input" + errorClass} type="text" name="artist" placeholder={placeholder} />
+                    <input className={"search__input" + errorClass} type="text" name="artist" placeholder={placeholder} disabled={disabled}/>
                     {button}
                 </div>
             </div>
