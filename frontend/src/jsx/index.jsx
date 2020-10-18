@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {render} from 'react-dom';
-import { BrowserRouter, Route, withRouter } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 import axios from "axios";
 import YouTube from 'react-youtube';
 import '../scss/main.scss';
@@ -48,8 +48,6 @@ const SearchResult = (props) =>{
                 videoId: state.trackList[0].video_id
             });
             setIsLoding(true);
-        }else{
-            console.log("bbb");
         }
     }, []);
 
@@ -120,6 +118,7 @@ const SearchResult = (props) =>{
 
 const TopPage = (props) => {
     const[isError, setIsError] = useState(false);
+    const[isLoding    , setIsLoding   ] = useState(false);
     const[placeholder , setPlaceholder] = useState("好きなアーティスト名を入力して探そう");
 
     const errorClass = ( isError == true ) ? ' search__input--error' : '' ;
@@ -128,6 +127,7 @@ const TopPage = (props) => {
         const artist = document.querySelector('input[name="artist"]');
         if(artist.value){
             setIsError(false);
+            setIsLoding(true);
             getApiData(artist.value);
         }else{
             setIsError(true);
@@ -160,8 +160,7 @@ const TopPage = (props) => {
         axios.get('http://192.168.33.10/api/v1/lastfm/' + artistName + '/similarTrack')
             .then(
                 (result) => {
-                    console.log(result.data.similar_artist_track);
-                    getYoutubeApiData(result.data.similar_artist_track);
+                    getYoutubeApiData(result.data.similar_artist_track,artistName);
                 }
             )
             .catch(
@@ -173,7 +172,7 @@ const TopPage = (props) => {
             );
     }
 
-    const getYoutubeApiData = async (trackList) =>{
+    const getYoutubeApiData = async (trackList,artistName) =>{
         let cnt = 0;
         let tracksData = [];
         for (let i = 0; i < trackList.length; ++i) {
@@ -187,7 +186,6 @@ const TopPage = (props) => {
                                 video_id: result.data.video_id,
                                 video_thumbnail: result.data.video_thumbnail,
                             }
-                            console.log(tmp);
                             tracksData.push(tmp);
                             cnt++;
                         }
@@ -205,10 +203,25 @@ const TopPage = (props) => {
                 pathname: '/search',
                 state: { 
                     trackList: tracksData,
-                    artistName: "radiohead",
+                    artistName: artistName,
                 }
             });
         }
+    }
+
+    let button;
+    if (isLoding) {
+        button = <div className="spinner">
+                    <div className="rect1"></div>
+                    <div className="rect2"></div>
+                    <div className="rect3"></div>
+                    <div className="rect4"></div>
+                    <div className="rect5"></div>
+                </div>;
+    } else {
+        button = <button className="search__button" onClick={searchAction}>
+                    見つける <i className="fa fa-search"></i>
+                </button>;
     }
 
     return (
@@ -221,9 +234,7 @@ const TopPage = (props) => {
 
                 <div className="search">
                     <input className={"search__input" + errorClass} type="text" name="artist" placeholder={placeholder} />
-                    <button className="search__button" onClick={searchAction}>
-                        見つける <i className="fa fa-search"></i>
-                    </button>
+                    {button}
                 </div>
             </div>
         </div>
