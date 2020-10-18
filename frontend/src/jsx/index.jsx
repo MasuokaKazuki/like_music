@@ -150,11 +150,65 @@ const TopPage = (props) => {
             )
             .catch(
                 (error) => {
-                    setIsError(true);
-                    alert("予期せぬエラーが発生しました。");
+                    getLastfmApiData(artistName);
                     console.log(error);
                 }
             );
+    }
+
+    const getLastfmApiData = (artistName) =>{
+        axios.get('http://192.168.33.10/api/v1/lastfm/' + artistName + '/similarTrack')
+            .then(
+                (result) => {
+                    console.log(result.data.similar_artist_track);
+                    getYoutubeApiData(result.data.similar_artist_track);
+                }
+            )
+            .catch(
+                (error) => {
+                    setIsError(true);
+                    alert("お探しのアーティストに関する情報は見つかりませんでした。");
+                    console.log(error);
+                }
+            );
+    }
+
+    const getYoutubeApiData = async (trackList) =>{
+        let cnt = 0;
+        let tracksData = [];
+        for (let i = 0; i < trackList.length; ++i) {
+            await axios.get('http://192.168.33.10/api/v1/youtube/' + trackList[i].artist + '/' + trackList[i].track )
+                .then(
+                    (result) => {
+                        if(result.data.video_id && result.data.video_thumbnail){
+                            const tmp = {
+                                artist: trackList[i].artist,
+                                track: trackList[i].track,
+                                video_id: result.data.video_id,
+                                video_thumbnail: result.data.video_thumbnail,
+                            }
+                            console.log(tmp);
+                            tracksData.push(tmp);
+                            cnt++;
+                        }
+                    }
+                )
+                .catch(
+                    (error) => {
+                        console.log(error);
+                    }
+                );
+            if(cnt >= 15) break;
+        }
+        if(tracksData){
+            props.history.push({
+                pathname: '/search',
+                state: { 
+                    trackList: tracksData,
+                    artistName: "radiohead",
+                }
+            });
+        }
     }
 
     return (
