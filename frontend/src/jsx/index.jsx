@@ -26,50 +26,39 @@ const Track = (props) => {
 
 const SearchButton = () => {
     return (
-      <div className="search-button"><i className="fa fa-search fa-lg" style={{color:'#fff'}}></i></div>
+        <div className="search-button">
+            <i className="fa fa-search fa-lg" style={{color:'#fff'}}></i>
+        </div>
     );
 }
 
-const SearchResult = () =>{
+const SearchResult = (props) =>{
     const[searchArtist, setSearchArtist] = useState();
     const[trackList   , setTrackList   ] = useState([]);
     const[isLoding    , setIsLoding    ] = useState(false);
     const[currentTrack, setCurrentTrack] = useState({ index: 0, videoId: "" });
 
-    useEffect(() => { 
-        const params = new URLSearchParams(location.search);
-        if(params && params.get("query")){
-            getApiData(params.get("query"));
-            setSearchArtist(params.get("query"));
+    useEffect(() => {
+        const state = props.location.state;
+        if(state.trackList){
+            setTrackList(state.trackList);
+            setSearchArtist(state.artistName);
+            setCurrentTrack({
+                index  : 0,
+                videoId: state.trackList[0].video_id
+            });
+            setIsLoding(true);
+        }else{
+            console.log("bbb");
         }
     }, []);
+
 
     const play = (e) =>{
         setCurrentTrack({
             index:   e.currentTarget.getAttribute("data-index"),
             videoId: e.currentTarget.getAttribute("data-videoid")
         });
-    }
-
-    const getApiData = (artistName) => {
-        axios.get('http://192.168.33.10/api/v1/artist/' + artistName + '/similarTrack')
-            .then(
-                (result) => {
-                    setTrackList(result.data.similar_artist_track);
-                    setCurrentTrack({
-                        index  : 0,
-                        videoId: result.data.similar_artist_track[0].video_id
-                    });
-
-                    setIsLoding(true);
-                }
-            )
-            .catch(
-                (error) => {
-                    setSearchArtist('');
-                    console.log(error);
-                }
-            );
     }
 
     const opts = {
@@ -124,20 +113,49 @@ const SearchResult = () =>{
         );
     }else{
         return(
-            <p>残念だったな</p>
+            <div>loading...</div>
         );
     }
 }
 
-const Test = () => {
-    const[detail, setDetail] = useState();
-    return(
-        <p data-index={detail}>test</p>
-    );
-}
-
 const TopPage = (props) => {
-    const errorClass = ( props.isError == true ) ? ' search__input--error' : '' ;
+    const[isError, setIsError] = useState(false);
+    const[placeholder , setPlaceholder] = useState("好きなアーティスト名を入力して探そう");
+
+    const errorClass = ( isError == true ) ? ' search__input--error' : '' ;
+
+    const searchAction = (e) =>  {
+        const artist = document.querySelector('input[name="artist"]');
+        if(artist.value){
+            setIsError(false);
+            getApiData(artist.value);
+        }else{
+            setIsError(true);
+            setPlaceholder("アーティスト名を入力して下さい。");
+        }
+    }
+    
+    const getApiData = (artistName) => {
+        axios.get('http://192.168.33.10/api/v1/artist/' + artistName + '/similarTrack')
+            .then(
+                (result) => {
+                    props.history.push({
+                        pathname: '/search',
+                        state: { 
+                            trackList: result.data.similar_artist_track,
+                            artistName: artistName,
+                        }
+                    });
+                }
+            )
+            .catch(
+                (error) => {
+                    setIsError(true);
+                    alert("予期せぬエラーが発生しました。");
+                    console.log(error);
+                }
+            );
+    }
 
     return (
         <div className="top-page">
@@ -145,11 +163,11 @@ const TopPage = (props) => {
                 <div className="top-content__title">
                     <img src="http://192.168.33.10/common/image/logo.svg" alt="Like Music" />
                 </div>
-                <div className="top-content__catch">今ある好きから、新しい好きを探す音楽アプリ。</div>
+                <div className="top-content__catch">今ある「好き」から、新しい「好き」を探す音楽アプリ。</div>
 
                 <div className="search">
-                    <input className={"search__input" + errorClass} type="text" name="artist" value={props.artist} placeholder={props.placeholder} />
-                    <button className="search__button">
+                    <input className={"search__input" + errorClass} type="text" name="artist" placeholder={placeholder} />
+                    <button className="search__button" onClick={searchAction}>
                         見つける <i className="fa fa-search"></i>
                     </button>
                 </div>
@@ -159,8 +177,11 @@ const TopPage = (props) => {
 }
 
 const App = (props) => {
-    return (
-        <TopPage isError={false} placeholder="好きなアーティスト名を入力して探そう" />
+    return(
+        <BrowserRouter>
+            <Route exact={true} path='/' component={TopPage}/>
+            <Route exact={true} path='/search' component={SearchResult}/>
+        </BrowserRouter>
     );
 }
 
