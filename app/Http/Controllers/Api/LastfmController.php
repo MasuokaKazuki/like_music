@@ -20,6 +20,8 @@ class LastfmController extends Controller
 		if( Request::get('artist_track_num') ) $artistTrackNum = Request::get('artist_track_num');
 
 		$tmp = $lastfm->getSimilarArtistTrack($artistName,$artistNum,$artistTrackNum);
-		return response()->json(['similar_artist_track' => $tmp]);
+		$status = ( empty($tmp) ) ? 404 : 200 ;
+		
+		return response()->json(['similar_artist_track' => $tmp], $status);
 	}
 }
