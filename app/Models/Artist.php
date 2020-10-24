@@ -74,7 +74,7 @@ class Artist extends Model
 
 			$similarArtist = new SimilarArtist();
 
-			if( $similarUpdate && !$similarArtist->hasSimilarArtist($apiArtistName) ){
+			if( $similarUpdate ){
 				$similarArtist->doUpdate($apiArtistName);
 			}
 		}
