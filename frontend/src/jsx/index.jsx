@@ -162,7 +162,7 @@ const TopPage = (props) => {
     const updateArtistdata = (artistName) => {
         axios.get('http://192.168.33.10/api/v1/artist/' + artistName)
             .then(function (response) {
-                console.log(response.data);
+                console.log(response.status);
             })
     }
 
