@@ -153,7 +153,17 @@ const TopPage = (props) => {
                     getLastfmApiData(artistName);
                     console.log(error);
                 }
-            );
+            )
+            .finally(() => {
+                updateArtistdata(artistName);
+            });
+    }
+
+    const updateArtistdata = (artistName) => {
+        axios.get('http://192.168.33.10/api/v1/artist/' + artistName)
+            .then(function (response) {
+                console.log(response.data);
+            })
     }
 
     const getLastfmApiData = (artistName) =>{
