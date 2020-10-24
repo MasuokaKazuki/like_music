@@ -11,10 +11,6 @@
 |
 */
 
-Route::get('/test/update/post', function () {
-    return view('update_post');
-});
-
 Route::get('/', function () {
     return view('index');
 });
