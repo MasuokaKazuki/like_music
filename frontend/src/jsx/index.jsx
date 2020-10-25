@@ -118,14 +118,22 @@ const SearchResult = (props) =>{
 
 const TopPage = (props) => {
     const[isError, setIsError] = useState(false);
-    const[isLoding    , setIsLoding   ] = useState(false);
-    const[placeholder , setPlaceholder] = useState("好きなアーティスト名を入力して探そう");
+    const[isLoding   , setIsLoding   ] = useState(false);
+    const[placeholder, setPlaceholder] = useState("好きなアーティスト名を入力して探そう");
 
     const errorClass = ( isError == true ) ? ' search__input--error' : '' ;
+
+    useEffect(() => {
+        if(sessionStorage.getItem('artist')){
+            const artist = document.querySelector('input[name="artist"]');
+            artist.value = sessionStorage.getItem('artist');
+        }
+    }, []);
 
     const searchAction = (e) =>  {
         const artist = document.querySelector('input[name="artist"]');
         if(artist.value){
+            sessionStorage.artist = artist.value;
             setIsError(false);
             setIsLoding(true);
             getApiData(artist.value);
