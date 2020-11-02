@@ -51,6 +51,17 @@ const SearchResult = (props) =>{
         }
     }, []);
 
+    useEffect(() => {
+        const elem = document.getElementsByClassName('track--current');
+        if(elem[0]){
+            setTimeout(function(){
+                const rect = elem[0].getBoundingClientRect();
+                const elemtop = rect.top;
+                    document.documentElement.scrollTop = elemtop - window.innerHeight/2*0.9;
+            }, 10);
+        }
+
+    }, [currentTrack]);
 
     const play = (e) =>{
         setCurrentTrack({
@@ -89,11 +100,15 @@ const SearchResult = (props) =>{
         }
     }
 
+    const onPlayerError = (e) => {
+        console.log("error");
+    }
+
     if (isLoding && trackList[0]) {
         return (
             <div className="search-result-page">
                 <div className="video-area">
-                    <YouTube videoId={currentTrack.videoId} opts={opts} onStateChange={onPlayerStateChange} />
+                    <YouTube videoId={currentTrack.videoId} opts={opts} onStateChange={onPlayerStateChange} onError={onPlayerError}/>
                 </div>
 
                 <ListTitle value={searchArtist}/>
@@ -169,9 +184,11 @@ const TopPage = (props) => {
 
     const updateArtistdata = (artistName) => {
         axios.get('http://192.168.33.10/api/v1/artist/' + artistName)
-            .then(function (response) {
-                console.log(response.status);
-            })
+            .catch(
+                (error) => {
+                    console.log(error);
+                }
+            );
     }
 
     const getLastfmApiData = (artistName) =>{
@@ -183,7 +200,6 @@ const TopPage = (props) => {
             )
             .catch(
                 (error) => {
-                    setIsError(true);
                     setIsLoding(false);
                     alert("お探しのアーティストに関する情報は見つかりませんでした。");
                     console.log(error);
@@ -233,7 +249,7 @@ const TopPage = (props) => {
     }
 
     let button;
-    let disabled;
+    let inputDisabled;
     if (isLoding) {
         button = <div className="spinner">
                     <div className="rect1"></div>
@@ -242,13 +258,13 @@ const TopPage = (props) => {
                     <div className="rect4"></div>
                     <div className="rect5"></div>
                 </div>;
-        disabled = "disabled";
+        inputDisabled = "disabled";
 
     } else {
         button = <button className="search__button" onClick={searchAction}>
                     見つける <i className="fa fa-search"></i>
                 </button>;
-        disabled = "";
+        inputDisabled = "";
     }
 
     return (
@@ -257,10 +273,10 @@ const TopPage = (props) => {
                 <div className="top-content__title">
                     <img src="http://192.168.33.10/common/image/logo.svg" alt="Like Music" />
                 </div>
-                <div className="top-content__catch">今ある「好き」から、新しい「好き」を探す音楽アプリ。</div>
+                <div className="top-content__catch">自分の好きなアーティストを入力するだけで、<br/>新しい「好き」を見つかる音楽アプリ。</div>
 
                 <div className="search">
-                    <input className={"search__input" + errorClass} type="text" name="artist" placeholder={placeholder} disabled={disabled}/>
+                    <input className={"search__input" + errorClass} type="text" name="artist" placeholder={placeholder} disabled={inputDisabled}/>
                     {button}
                 </div>
             </div>
