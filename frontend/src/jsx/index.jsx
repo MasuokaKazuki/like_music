@@ -104,6 +104,10 @@ const SearchResult = (props) =>{
         console.log("error");
     }
 
+    const pageBack = (e) =>  {
+        props.history.push('/');
+    }
+
     if (isLoding && trackList[0]) {
         return (
             <div className="search-result-page">
@@ -121,7 +125,9 @@ const SearchResult = (props) =>{
                     ))}
                 </section>
 
-                <SearchButton/>
+                <div className="search-button" onClick={pageBack}>
+                    <i className="fa fa-search fa-lg" style={{color:'#fff'}}></i>
+                </div>
             </div>
         );
     }else{
