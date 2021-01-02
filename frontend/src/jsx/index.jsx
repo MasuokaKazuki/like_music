@@ -121,7 +121,7 @@ const SearchResult = (props) =>{
 const TopPage = (props) => {
     const[isError, setIsError] = useState(false);
     const[isLoding   , setIsLoding   ] = useState(false);
-    const[placeholder, setPlaceholder] = useState("好きなアーティスト名を入力して探そう");
+    const[placeholder, setPlaceholder] = useState("好きなアーティスト名を入力");
 
     const errorClass = ( isError == true ) ? ' search__input--error' : '' ;
 
