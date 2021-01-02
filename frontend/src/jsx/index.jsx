@@ -24,14 +24,6 @@ const Track = (props) => {
     );
 }
 
-const SearchButton = () => {
-    return (
-        <div className="search-button">
-            <i className="fa fa-search fa-lg" style={{color:'#fff'}}></i>
-        </div>
-    );
-}
-
 const SearchResult = (props) =>{
     const[searchArtist, setSearchArtist] = useState();
     const[trackList   , setTrackList   ] = useState([]);
