@@ -43,23 +43,12 @@ const SearchResult = (props) =>{
         }
     }, []);
 
-    useEffect(() => {
-        const elem = document.getElementsByClassName('track--current');
-        if(elem[0]){
-            setTimeout(function(){
-                const rect = elem[0].getBoundingClientRect();
-                const elemtop = rect.top;
-                    document.documentElement.scrollTop = elemtop - window.innerHeight/2*0.9;
-            }, 10);
-        }
-
-    }, [currentTrack]);
-
     const play = (e) =>{
         setCurrentTrack({
             index:   e.currentTarget.getAttribute("data-index"),
             videoId: e.currentTarget.getAttribute("data-videoid")
         });
+        e.preventDefault();
     }
 
     const opts = {
