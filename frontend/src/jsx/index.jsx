@@ -267,6 +267,12 @@ const TopPage = (props) => {
         inputDisabled = "";
     }
 
+    const onEntryKey = (e) =>{
+        if (e.key == 'Enter') {
+            searchAction();
+        }
+    }
+
     return (
         <div className="top-page">
             <div className="top-content">
@@ -276,7 +282,7 @@ const TopPage = (props) => {
                 <div className="top-content__catch">自分の好きなアーティストを入力するだけで、<br/>新しい「好き」を見つかる音楽アプリ。</div>
 
                 <div className="search">
-                    <input className={"search__input" + errorClass} type="text" name="artist" placeholder={placeholder} disabled={inputDisabled}/>
+                    <input className={"search__input" + errorClass} type="text" name="artist" placeholder={placeholder} disabled={inputDisabled} onKeyPress={(e) => onEntryKey(e)}/>
                     {button}
                 </div>
             </div>
